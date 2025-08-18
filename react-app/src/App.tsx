@@ -1,33 +1,103 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react'
 
-function App() {
-  const [count, setCount] = useState(0)
+import FloatingButton from './components/FloatingButton'
+import Widget from './components/Widget'
+
+import { useWidgetVisibility } from './hooks/useWidgetVisibility'
+
+import useUserRepository from './infra/repository/user'
+import usePostsRepository from './infra/repository/posts'
+
+import { isMobile } from './utils'
+import { PredefinedErrors } from './interfaces'
+
+const App: React.FC = () => {
+  const {
+    isVisible,
+    userId,
+    hasLoadedData,
+    setHasLoadedData,
+    toggleWidget,
+    initializeWidget,
+  } = useWidgetVisibility()
+
+  const {
+    user,
+    getUser,
+    loading: userLoading,
+    error: userError,
+  } = useUserRepository()
+
+  const {
+    posts,
+    getPosts,
+    loading: postsLoading,
+    error: postsError,
+  } = usePostsRepository()
+
+  const [loadingRetry, setLoadingRetry] = useState(false)
+
+  const handleRetryUser = async (errorMessage: string) => {
+    if (errorMessage.includes(PredefinedErrors.invalidUserId)) {
+      initializeWidget()
+      return
+    }
+    if (!userId) return
+    setLoadingRetry(true)
+    try {
+      await getUser(userId)
+    } finally {
+      setLoadingRetry(false)
+    }
+  }
+
+  const handleRetryPosts = async () => {
+    if (!userId) return
+    setLoadingRetry(true)
+    try {
+      await getPosts(userId)
+    } finally {
+      setLoadingRetry(false)
+    }
+  }
+
+  const handleButtonClick = () => {
+    toggleWidget()
+
+    if (userId && !hasLoadedData && !userError && !postsError) {
+      getUser(userId)
+      setHasLoadedData(true)
+    }
+    if (hasLoadedData && user?.userId && !isVisible) {
+      getPosts(user?.userId)
+    }
+  }
+
+  useEffect(() => {
+    if (user && user.userId) {
+      getPosts(user.userId)
+    }
+  }, [user, getPosts])
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <FloatingButton isVisible={isVisible} onClick={handleButtonClick} />
+
+      <Widget
+        isVisible={isVisible}
+        isMobile={isMobile}
+        userId={userId}
+        loadingUser={userLoading}
+        loadingPosts={postsLoading}
+        loadingRetry={loadingRetry}
+        error={userError}
+        userData={user}
+        posts={posts}
+        postsError={postsError}
+        hasLoadedData={hasLoadedData}
+        onRetryUser={handleRetryUser}
+        onRetryPosts={handleRetryPosts}
+      />
     </>
   )
 }

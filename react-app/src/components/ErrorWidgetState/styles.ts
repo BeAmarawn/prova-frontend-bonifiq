@@ -1,0 +1,41 @@
+export const styles = {
+  error: {
+    textAlign: 'center' as const,
+    padding: '24px',
+    backgroundColor: '#fef2f2',
+    borderRadius: '12px',
+    border: '1px solid #fecaca',
+    margin: '20px 0',
+  },
+  errorContent: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    gap: '12px',
+  },
+  errorMessage: {
+    fontSize: '14px',
+    lineHeight: '1.5',
+    textAlign: 'center' as const,
+    color: '#374151',
+  },
+  retryButton: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '10px 16px',
+    backgroundColor: '#667eea',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    fontSize: '14px',
+    fontWeight: '500',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s',
+    outline: 'none',
+    marginTop: '12px',
+  },
+  spinner: {
+    animation: 'spin 1s linear infinite',
+  },
+}
