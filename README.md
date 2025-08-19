@@ -20,13 +20,13 @@ O projeto foi construído utilizando uma arquitetura robusta, visando demonstrar
 
 ## Arquitetura e Estrutura
 
-A arquitetura segue um padrão inspirado em DDD (Domain-Driven Design), com separação clara de responsabilidades:
+A arquitetura segue um padrão inspirado em DDD, com separação clara de responsabilidades:
 
-- **Infraestrutura (**``**)**: Serviços, repositórios e configuração de acesso à API
-- **Domínio (**``**)**: Objetos de domínio (`User` e `Post`) e regras de negócio
+- **Infraestrutura**: Serviços, repositórios e configuração de acesso à API
+- **Domínio**: Objetos de domínio (`User` e `Post`) e regras de negócio
 - **Adapters e Hooks**: Abstraem a lógica de fetch para os componentes, permitindo expansão futura
 - **Components**: Renderização e interação da interface do usuário
-- **Main (**``**)**: Exporta o componente React final
+- **main.tsx**: Exporta o componente React final
 
 O fluxo arquitetural segue de fora para dentro:\
 `INFRA → Service → Repository → DOMAIN → Adapters → Hooks → COMPONENTS → main.tsx`
@@ -74,18 +74,20 @@ react-app
 - Abertura/fechamento do widget com botão flutuante
 - Exibição de informações do usuário: nome e e-mail
 - Listagem de posts do usuário: título e conteúdo
-- Smooth Opening
+- Smooth Opening:  
 ![Smooth Opening](imgs/smooth_opening.gif)
-- Loadings
+- Loadings:  
 ![Loadings](imgs/loadings.gif)
-- Refetch automático dos posts a cada abertura do widget, preservando o estado do usuário
+- Refetch automático dos posts a cada abertura do widget, preservando o estado do usuário:  
 ![Refetch](imgs/imgs/refetch_of_posts_on_every_popup.gif)
-- Tratamento de erros pra chamadas do User | Com retry
+- Tratamento de erros pra chamadas do User | Com retry:  
 ![User Error](/imgs/error_handling_for_user_with_retry.gif)
-- Tratamento de erros pra chamadas dos Posts | Com retry
+- Tratamento de erros pra chamadas dos Posts | Com retry:  
 ![Posts Error](imgs/individual_error_handling_for_posts_with_retry.gif)
-- Testes de fluxo simulando alterações na API (ex.: usando proxy de rede)
+- Todos os casos de erro:  
 ![Tests](imgs/all_flow_error_handling.gif)
+- Testes de fluxo simulando alterações na API (ex.: usando proxy de rede):  
+![Tests](imgs/tests_with_fiddler.gif)
 
 ## Testes Unitários
 
@@ -106,7 +108,6 @@ tests/
 │   ├── services/         # Testes dos serviços
 │   └── config/           # Testes das configurações
 ├── setup.ts              # Configuração global dos testes
-└── README.md             # Este arquivo
 ```
 
 ### Como executar os testes
