@@ -7,6 +7,7 @@ export const styles = {
     height: '600px',
     backgroundColor: 'white',
     borderRadius: '16px',
+    boxShadow: '0 5px 10px 0px rgba(0, 0, 0, 0.25)',
     transformOrigin: 'bottom right',
     overflow: 'hidden',
     zIndex: 1000,
