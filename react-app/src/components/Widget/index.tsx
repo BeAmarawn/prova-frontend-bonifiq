@@ -54,7 +54,7 @@ const Widget: React.FC<WidgetProps> = ({
   const showUserData = userData && !loadingUser && !error
 
   return (
-    <div style={widgetStyle}>
+    <div style={widgetStyle} data-testid="widget">
       <div style={styles.header}>
         <div style={styles.headerTitle}>
           <User size={20} />

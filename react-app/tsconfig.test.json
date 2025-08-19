@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["jest", "node"],
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "verbatimModuleSyntax": false,
+  },
+  "include": ["tests/**/*", "src/**/*"],
+  "exclude": ["node_modules"]
+}
