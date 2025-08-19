@@ -1,97 +1,137 @@
-# 🧪 Prova Prática – Desenvolvedor Front-End
+# Projeto Widget React
 
-## 🧠 Objetivo
+## Visão Geral
 
-Avaliar a capacidade do candidato em desenvolver e integrar um widget em uma página web, consumindo dados de uma API e utilizando tecnologias modernas como React.
+O projeto foi desenvolvido e entregue com um widget completo, composto por:
 
----
+- **Aplicação React**
+  - Botão flutuante de abertura/fechamento do widget
+  - Janela de informações do usuário e seus posts
+- **Script **``
+  - Responsável pelo carregamento da aplicação na página do cliente
 
-## 📋 Instruções Gerais
+Diferentemente das instruções iniciais, o botão foi implementado dentro da aplicação React, garantindo:
 
-Você deve entregar:
+- Maior controle de estilos e comportamentos
+- Tratamento de estados de abertura e fechamento
+- Melhor integridade do código, considerando que o script externo não é facilmente atualizado
 
-1. Um arquivo JavaScript que será incluído em qualquer site para carregar um widget contendo um iFrame.
-2. Um projeto React utilizando o framework Vite + TypeScript com a página a ser carregada no widget.
-3. As instruções de como executar e testar a solução.
+O projeto foi construído utilizando uma arquitetura robusta, visando demonstrar um case sólido de implementação.
 
----
+## Arquitetura e Estrutura
 
-## ✅ Requisitos
+A arquitetura segue um padrão inspirado em DDD (Domain-Driven Design), com separação clara de responsabilidades:
 
-### 1. JavaScript para inserir o widget (arquivo externo)
+- **Infraestrutura (**``**)**: Serviços, repositórios e configuração de acesso à API
+- **Domínio (**``**)**: Objetos de domínio (`User` e `Post`) e regras de negócio
+- **Adapters e Hooks**: Abstraem a lógica de fetch para os componentes, permitindo expansão futura
+- **Components**: Renderização e interação da interface do usuário
+- **Main (**``**)**: Exporta o componente React final
 
-Desenvolva um script JS que:
+O fluxo arquitetural segue de fora para dentro:\
+`INFRA → Service → Repository → DOMAIN → Adapters → Hooks → COMPONENTS → main.tsx`
 
-- Cria um botão flutuante fixo no canto inferior direito da tela (como um botão de chat).
-- Ao clicar no botão, um iFrame deve aparecer com o conteúdo da aplicação React.
-- O botão deve permitir abrir/fechar o widget.
-- O script deve ser facilmente incorporado via `<script src="..."></script>` em qualquer site.
+### Estrutura de pastas do projeto
 
-> 💡 O `window.loggedUserId` estará definido na página principal com o valor do ID do usuário logado (por exemplo: `window.loggedUserId = 2`).
+```
+react-app
+├── src
+│   ├── assets
+│   ├── components
+│   │   └── Widget
+│   │       ├── index.tsx
+│   │       └── styles.ts
+│   ├── domain
+│   │   └── user.ts
+│   ├── hooks
+│   │   └── useWidgetVisibility.ts
+│   ├── infra
+│   │   ├── config
+│   │   │   └── apiInstance.ts
+│   │   ├── repository
+│   │   │   └── user.ts
+│   │   └── services
+│   │       └── user.ts
+│   ├── main.tsx
+│   ├── vite-env.d.ts
+│   └── window.d.ts
+├── tests
+```
 
----
+### Tecnologias e padrões
 
-### 2. Aplicação React
+- **Axios** para requisições HTTP
+- **Variáveis de ambiente** para segurança
+- **Tratamento de erros** completo em todas as etapas:
+  - Busca do `userId` na página pai do iFrame
+  - Requisições à API de usuário e posts
+  - Retry individual para falhas
+- **Smooth Opening** com delay para prevenir falhas de renderização da página pai
+- **Loadings independentes** para cada requisição, garantindo boa experiência de usuário
 
-Você deverá criar uma aplicação que será exibida dentro do iFrame. Essa aplicação deve:
+## Funcionalidades do Widget
 
-- Ao carregar, ler o valor de `window.parent.loggedUserId` via `postMessage`.
-- Usar esse ID para fazer uma requisição `GET` para:
-  `https://jsonplaceholder.typicode.com/users/<ID>`
-- Exibir na tela os seguintes dados do usuário retornado:
-  - Nome
-  - E-mail
-- Usar o mesmo ID para fazer uma requisição `GET` para:
-  `https://jsonplaceholder.typicode.com/posts?userId=<ID>`
-- Exibir na tela os posts realizados pelo usuário contendo:
-  - Título (`title`)
-  - Conteúdo (`body`)
+- Abertura/fechamento do widget com botão flutuante
+- Exibição de informações do usuário: nome e e-mail
+- Listagem de posts do usuário: título e conteúdo
+- Smooth Opening
+![Smooth Opening](imgs/smooth_opening.gif)
+- Loadings
+![Loadings](imgs/loadings.gif)
+- Refetch automático dos posts a cada abertura do widget, preservando o estado do usuário
+![Refetch](imgs/imgs/refetch_of_posts_on_every_popup.gif)
+- Tratamento de erros pra chamadas do User | Com retry
+![User Error](/imgs/error_handling_for_user_with_retry.gif)
+- Tratamento de erros pra chamadas dos Posts | Com retry
+![Posts Error](imgs/individual_error_handling_for_posts_with_retry.gif)
+- Testes de fluxo simulando alterações na API (ex.: usando proxy de rede)
+![Tests](imgs/all_flow_error_handling.gif)
 
-> ⚠️ Importante: a aplicação React precisa funcionar mesmo rodando em um iFrame hospedado em outro domínio.
+## Testes Unitários
 
----
+O projeto conta com testes unitários completos utilizando Jest e React Testing Library, seguindo a mesma organização do código para manter clareza e facilidade de manutenção.
 
-### 3. Design & UX
+### Estrutura dos testes
 
-- O widget pode ser simples, mas deve ser utilizável em desktop e mobile.
-- O widget deve cobrir no máximo **320px de largura** e **600px de altura**.
-- Sinta-se livre para utilizar bibliotecas com componentes prontos ou de estilização.
-- Deve haver um botão de **fechar** dentro do próprio widget.
+```
+tests/
+├── components/           # Testes dos componentes React
+│   ├── ErrorWidgetState/
+│   ├── FloatingButton/
+│   └── Widget/
+├── hooks/                # Testes dos hooks customizados
+├── domain/               # Testes da camada de domínio
+├── infra/                # Testes da camada de infraestrutura
+│   ├── repository/       # Testes dos repositórios
+│   ├── services/         # Testes dos serviços
+│   └── config/           # Testes das configurações
+├── setup.ts              # Configuração global dos testes
+└── README.md             # Este arquivo
+```
 
----
+### Como executar os testes
 
-## 🧪 Critérios de Avaliação
+Executar todos os testes:
 
-| Critério                          | Peso |
-|----------------------------------|------|
-| Funcionalidade completa          | 40%  |
-| Organização do código            | 20%  |
-| Uso adequado de React e JS       | 20%  |
-| UX e comportamento do widget     | 10%  |
-| Clareza nas instruções de uso    | 10%  |
+```bash
+npm test
+```
+Executar testes e conferir o coverage:
 
----
+```bash
+npm run test:coverage
+```
 
-## 🚀 Extras (não obrigatórios, mas contam pontos)
+### Cobertura
 
-- Adicionar tratamento de erro caso o ID do usuário seja inválido.
-- Fazer loading enquanto a API é chamada.
-- Testes unitários
+![Coverage](imgs/coverage.png)
 
----
+**Os testes abrangem:**
 
-## 👾 Exemplos
+- Renderização de componentes
+- Lógica de negócio
+- Tratamento de erros
+- Estados de loading
+- Validações
+- Adapters
 
-![Aviato example](imgs/01.gif)
-![Classimax example](imgs/02.gif)
-![Shop example](imgs/03.gif)
-
----
-
-## 📦 Entrega
-
-- Basta fazer um pull-request nesse repositório contendo seu nome completo no título do mesmo.
-
----
-
-Boa sorte! 🍀
