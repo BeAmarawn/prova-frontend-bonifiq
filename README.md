@@ -1,5 +1,14 @@
 # Projeto Widget React
 
+## Para testar
+
+Rode o app React com:
+
+```bash
+npm run dev
+```
+Acesse os sites exemplo através do index.html e confira o fluxo!
+
 ## Visão Geral
 
 O projeto foi desenvolvido e entregue com um widget completo, composto por:
