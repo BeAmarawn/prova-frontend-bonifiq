@@ -7,7 +7,7 @@ O projeto foi desenvolvido e entregue com um widget completo, composto por:
 - **Aplicação React**
   - Botão flutuante de abertura/fechamento do widget
   - Janela de informações do usuário e seus posts
-- **Script **``
+- **Script**
   - Responsável pelo carregamento da aplicação na página do cliente
 
 Diferentemente das instruções iniciais, o botão foi implementado dentro da aplicação React, garantindo:
