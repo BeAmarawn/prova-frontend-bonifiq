@@ -22,7 +22,6 @@
       width: 320px;
       height: 600px;
       border: none;
-      border-radius: 16px;
       z-index: 999999;
       overflow: visible;
       background: transparent;
@@ -47,14 +46,12 @@
     
     isWidgetOpen = true;
     sendMessageToIframe({ type: 'SHOW_WIDGET' });
-    console.log('Widget aberto');
   }
   
   function hideWidget() {
     if (widgetIframe) {
       isWidgetOpen = false;
       sendMessageToIframe({ type: 'HIDE_WIDGET' });
-      console.log('Widget fechado');
     }
   }
   
@@ -70,7 +67,6 @@
     if (widgetIframe && widgetIframe.contentWindow) {
       try {
         widgetIframe.contentWindow.postMessage(message, '*');
-        console.log('📤 Mensagem enviada:', message.type);
       } catch (error) {
         console.warn('Erro ao enviar mensagem:', error);
       }
@@ -104,9 +100,6 @@
           isWidgetOpen: isWidgetOpen
         });
         break;
-        
-      default:
-        console.log('📥 Mensagem recebida:', type);
     }
   }
 
@@ -121,18 +114,10 @@
       return;
     }
     
-    console.log('🚀 Inicializando User Widget...');
-    
     window.addEventListener('message', handleIframeMessages);
     createIframe();
     
     window._userWidgetInitialized = true;
-    
-    if (window.loggedUserId) {
-      console.log('✅ loggedUserId:', window.loggedUserId);
-    } else {
-      console.warn('⚠️ loggedUserId não encontrado');
-    }
   }
 
   initWidget();

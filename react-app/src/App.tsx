@@ -85,7 +85,7 @@ const App: React.FC = () => {
 
       <Widget
         isVisible={isVisible}
-        isMobile={isMobile}
+        isMobile={isMobile()}
         userId={userId}
         loadingUser={userLoading}
         loadingPosts={postsLoading}
